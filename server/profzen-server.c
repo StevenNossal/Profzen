@@ -2,14 +2,15 @@
 
 #include "profzen-server.h"
 
+int debug_level = 7;
 volatile int force_exit = 0;
 struct lws_context *context;
 
 
 
 /* http server gets files from this path */
-#define LOCAL_RESOURCE_PATH INSTALL_DATADIR"/profzen"
-char *resource_path = LOCAL_RESOURCE_PATH
+#define LOCAL_RESOURCE_PATH "/usr/local/share/profzen"
+char *resource_path = LOCAL_RESOURCE_PATH;
 
 
 
@@ -33,19 +34,19 @@ static struct lws_protocols protocols[] = {
 	{
 		"http-only",		/* name */
 		callback_http,		/* callback */
-		sizeof( struct per_session_data_http ),		/* per session data size */
+		sizeof( struct per_session_data__http ),		/* per session data size */
 		0, 			/* max frae size / rx buffer */
 	},
 	{
 		"profzen-writer",
 		callback_profzen_writer,
-		sizeof( strurt per_session_profzen_writer ),
+		sizeof( struct per_session_data__profzen_writer ),
 		0,
 	},
 	{
 		"profzen-annotator",
 		callback_profzen_annotator,
-		sizeof( struct per_session_profzen_annotator ),
+		sizeof( struct per_session_data__profzen_annotator ),
 	},
 	{ NULL, NULL, 0, 0 }	/* terminator */
 };
@@ -74,7 +75,8 @@ main (int argc, char **argv)
 {
 	struct lws_context_creation_info info;
 	const char *iface = NULL;
-	int uid = -1; int pid = -1;
+	int uid = -1; int gid = -1;
+	int opts = 0;
 	int n = 0;
 	int syslog_options = LOG_PID | LOG_PERROR;
 	int daemonize = 0;
@@ -100,7 +102,7 @@ main (int argc, char **argv)
 				break;
 			case 'r':
 				resource_path = optarg;
-				printf("Setting resource path to \"%s\"\n");
+				printf("Setting resource path to \"%s\"\n", resource_path);
 				break;
 			case 'h':
 				fprintf(stderr, "Usage: profzen "
@@ -117,7 +119,7 @@ main (int argc, char **argv)
 	* permissions or running as root, set to /tmp/.profzen-lock
 	*/
 	if (daemonize && lws_daemonize("/tmp/.profzen-lock")) {
-		fprintf("stderr, "Failed to daemonize\n");
+		fprintf(stderr, "Failed to daemonize\n");
 		return 10;
 	}
 
@@ -140,14 +142,14 @@ main (int argc, char **argv)
 
 	info.iface = iface;
 	info.protocols = protocols;
-	info.ssl_cert_filename = NULL;
+	info.ssl_cert_filepath = NULL;
 	info.ssl_private_key_filepath = NULL;
 
 	info.gid = gid;
 	info.uid = uid;
 	info.max_http_header_pool = 16;
 	info.options = opts | LWS_SERVER_OPTION_VALIDATE_UTF8;
-	info.extension = exts;
+	info.extensions = exts;
 	info.timeout_secs = 5;
 	/* info.ssl_cipher_list declaration goes here */
 	

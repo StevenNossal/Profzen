@@ -11,6 +11,7 @@ callback_profzen_writer(struct lws *wsi, enum lws_callback_reasons reason, void 
 	switch (reason) {
 
 		default:
+			if (NULL != pss) pss = NULL;  /* delete this line! */
 			break;
 		}
 

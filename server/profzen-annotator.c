@@ -12,6 +12,7 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 	switch (reason) {
 
 		default:
+			if ( NULL != pss ) pss = NULL;		/* Delete this line! */
 			break;
 		}
 
