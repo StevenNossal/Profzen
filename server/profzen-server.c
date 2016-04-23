@@ -12,7 +12,7 @@ struct lws_context *context;
 #define LOCAL_RESOURCE_PATH "/usr/local/share/profzen"
 char *resource_path = LOCAL_RESOURCE_PATH;
 
-
+char crl_path[1024] = "";
 
 
 enum profzen_protocols {
@@ -79,7 +79,7 @@ main (int argc, char **argv)
 	int opts = 0;
 	int n = 0;
 	int syslog_options = LOG_PID | LOG_PERROR;
-	int daemonize = 0;
+	/* int daemonize = 0; */
 	
 
 	memset(&info, 0, sizeof info);
@@ -97,7 +97,7 @@ main (int argc, char **argv)
 				info.port = atoi(optarg);
 				break;
 			case 'D':
-				daemonize = 1;
+				/* daemonize = 1; */
 				syslog_options &= ~LOG_PERROR;
 				break;
 			case 'r':
@@ -118,10 +118,13 @@ main (int argc, char **argv)
 	* simplify getting started without having to take care about
 	* permissions or running as root, set to /tmp/.profzen-lock
 	*/
+	
+	/*
 	if (daemonize && lws_daemonize("/tmp/.profzen-lock")) {
 		fprintf(stderr, "Failed to daemonize\n");
 		return 10;
 	}
+	*/
 
 	signal(SIGINT, sighandler);
 

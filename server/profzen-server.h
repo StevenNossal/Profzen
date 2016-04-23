@@ -20,6 +20,7 @@
 extern volatile int force_exit;
 extern struct lws_context *context;
 extern char *resource_path;
+extern char crl_path[1024];
 
 struct per_session_data__http {
 	lws_filefd_type	fd;
