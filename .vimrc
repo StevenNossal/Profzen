@@ -16,3 +16,8 @@ let &path.="src/include,/usr/include/AL,"
 nnoremap <F4> :make!<cr>
 nnoremap <F5> :!./my_great_program<cr>
 
+set number
+
+:map <F2> :cnext<CR>
+:map <S-F2> :cprev<CR>
+
