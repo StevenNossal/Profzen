@@ -1,8 +1,8 @@
-all: profzen-server.o profzen-http.o profzen-writer.o profzen-annotator.o  
+all: profzen-server  
 
-#profzen-server:
-#	gcc -Wall 
-
+profzen-server: profzen-server.o profzen-http.o profzen-writer.o profzen-annotator.o  
+	gcc -Wall profzen-server.o profzen-http.o profzen-writer.o profzen-annotator.o\
+		../bin/libwebsockets.a -lssl -lcrypto -o ../bin/profzen-server	   	
 
 profzen-server.o: profzen-server.c
 	gcc -Wall -c profzen-server.c
@@ -17,4 +17,4 @@ profzen-annotator.o: profzen-annotator.c
 	gcc -Wall -c profzen-annotator.c 
 
 clean:
-	rm  *.o profzen-server
+	rm  *.o ../bin/profzen-server
