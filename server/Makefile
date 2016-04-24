@@ -2,7 +2,7 @@ all: profzen-server
 
 profzen-server: profzen-server.o profzen-http.o profzen-writer.o profzen-annotator.o  
 	gcc -Wall profzen-server.o profzen-http.o profzen-writer.o profzen-annotator.o\
-		../bin/libwebsockets.a -lssl -lcrypto -o ../bin/profzen-server	   	
+		../lib/libwebsockets.a -lssl -lcrypto -o ../bin/profzen-server	   	
 
 profzen-server.o: profzen-server.c
 	gcc -Wall -c profzen-server.c

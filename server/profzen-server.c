@@ -9,26 +9,19 @@ struct lws_context *context;
 
 
 /* http server gets files from this path */
-#define LOCAL_RESOURCE_PATH "/usr/local/share/profzen"
+/* #define LOCAL_RESOURCE_PATH "/usr/local/share/profzen" */
+
+#define LOCAL_RESOURCE_PATH "/home/steven/Projects/profzen/html"
+
 char *resource_path = LOCAL_RESOURCE_PATH;
 
 char crl_path[1024] = "";
+char text[4096] = "";
 
-
-enum profzen_protocols {
-	/* always first */
-	PROTOCOL_HTTP = 0,
-
-	PROTOCOL_WRITER,
-	PROTOCOL_ANNOTATOR,
-
-	/* always last */
-	PROTOCOL_COUNT
-};
 
 /* list of supported protocols and callbacks */
 
-static struct lws_protocols protocols[] = {
+struct lws_protocols protocols[] = {
 	/* first protocol must always be HTTP handler */
 
 	{
@@ -41,7 +34,7 @@ static struct lws_protocols protocols[] = {
 		"profzen-writer",
 		callback_profzen_writer,
 		sizeof( struct per_session_data__profzen_writer ),
-		0,
+		128,
 	},
 	{
 		"profzen-annotator",

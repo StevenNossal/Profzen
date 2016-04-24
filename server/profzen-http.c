@@ -47,16 +47,6 @@ extern char crl_path[1024];
 
 extern int debug_level;
 
-enum demo_protocols {
-	/* always first */
-	PROTOCOL_HTTP = 0,
-
-	PROTOCOL_DUMB_INCREMENT,
-	PROTOCOL_LWS_MIRROR,
-
-	/* always last */
-	DEMO_PROTOCOL_COUNT
-};
 
 /*
  * We take a strict whitelist approach to stop ../ attacks
@@ -318,7 +308,7 @@ int callback_http(struct lws *wsi, enum lws_callback_reasons reason, void *user,
 				strcat(buf, "/");
 			strncat(buf, in, sizeof(buf) - strlen(buf) - 1);
 		} else /* default file to serve */
-			strcat(buf, "/test.html");
+			strcat(buf, "/index.html");
 		buf[sizeof(buf) - 1] = '\0';
 
 		/* refuse to serve files we don't understand */
