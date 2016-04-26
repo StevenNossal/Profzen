@@ -1,8 +1,89 @@
-<html>
+</html>
+<!DOCTYPE HTML>
+<html lang="en">
 	<head>
-		<title>Profzen: Annotator</title>
+		<meta charset=utf-8 http-equiv="Content-Language" content="en"/>
+		<title>Profzen Annotator</title>
+		<style type="text/css">
+			.writer {
+				width: 50%;
+				min-height: 100px;
+				max-height: 500px;
+				border: 1px solid black;
+			}	
+		</style>
 	</head>
 	<body>
-		<h1>Profzen: Annotoator</h1>
+		<h1>Prozen Annotator</h1>
+		
+		<h2>Writer 01</h2>
+		<div id="writer01" class="writer"></div>
+		<h2>Writer 02</h2>
+		<div id="writer02" class="writer"></div>
+		<h2>Writer 03</h2>
+		<div id="writer03" class="writer"></div>
+		<h2>Writer 04</h2>
+		<div id="writer04" class="writer"></div>
+		<h2>Writer 05</h2>
+		<div id="writer05" class="writer"></div>
+		<h2>Writer 06</h2>
+		<div id="writer06" class="writer"></div>
+		<h2>Writer 07</h2>
+		<div id="writer07" class="writer"></div>
+		<h2>Writer 08</h2>
+		<div id="writer08" class="writer"></div>
+		<h2>Writer 09</h2>
+		<div id="writer09" class="writer"></div>
+		<h2>Writer 10</h2>
+		<div id="writer10" class="writer"></div>
+		<script>
+			
+			var socket_aw;
+			
+			document.addEventListener('DOMContentLoaded', function() {
+				
+			       
+				try {
+					socket_aw= new WebSocket(get_appropriate_ws_url(),"profzen-annotator");
+					socket_aw.onopen = function() {
+						//alert("Socket Opened!");
+						socket_aw.send("test messge!\n");
+
+					}	
+					socket_aw.onmessage = function got_packet(msg) {
+						var targetDiv = document.getElementById("writer" + msg.data.substring(0,2));
+						targetDiv.innerHTML = msg.data.substring(2, msg.data.length);
+					}
+					socket_aw.onclose = function() {
+						//alert("Socket Closed!");
+					}
+				} catch(exception) {
+					alert('<p>Error' + exception);
+				}
+				
+
+				function get_appropriate_ws_url()
+				{
+					var pcol;
+					var u = document.URL;
+
+					if (u.substring(0, 5) == "https") {
+						pcol = "wss://";
+						u = u.substr(8);
+					} else {
+						pcol = "ws://";
+						if (u.substring(0,4) == "http")
+						u = u.substr(7);
+					}
+
+					u = u.split('/');
+
+					return pcol + u[0];
+				}
+
+
+		    	}, false);
+		</script>
 	</body>
+
 </html>

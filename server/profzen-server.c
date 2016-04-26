@@ -18,6 +18,7 @@ char *resource_path = LOCAL_RESOURCE_PATH;
 char crl_path[1024] = "";
 char text[4096] = "";
 
+struct profzen_writer writers[MAX_WRITERS + 1];
 
 /* list of supported protocols and callbacks */
 
@@ -34,12 +35,13 @@ struct lws_protocols protocols[] = {
 		"profzen-writer",
 		callback_profzen_writer,
 		sizeof( struct per_session_data__profzen_writer ),
-		128,
+		4096,
 	},
 	{
 		"profzen-annotator",
 		callback_profzen_annotator,
 		sizeof( struct per_session_data__profzen_annotator ),
+		128,
 	},
 	{ NULL, NULL, 0, 0 }	/* terminator */
 };
@@ -77,7 +79,9 @@ main (int argc, char **argv)
 
 	memset(&info, 0, sizeof info);
 	info.port = 7681;
-	
+
+	memset(&writers, 0, sizeof writers);
+
 	while (n >= 0) {
 		n = getopt_long(argc, argv, "hd:p:Dr:", options, NULL);
 		if (n < 0)

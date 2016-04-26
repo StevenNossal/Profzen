@@ -21,21 +21,22 @@
 				try {
 					socket_aw= new WebSocket(get_appropriate_ws_url(),"profzen-writer");
 					socket_aw.onopen = function() {
-						alert("Socket Opened!");
+						// alert("Socket Opened!");
 					}	
 					socket_aw.onmessage = function got_packet(msg) {
 					}
 					socket_aw.onclose = function() {
-						alert("Socket Closed!");
+						// alert("Socket Closed!");
 					}
 				} catch(exception) {
 					alert('<p>Error' + exception);
 				}
 				
 				var writereditor = document.getElementById("writer-editor");
-				writereditor.rows = 20;
+				writereditor.rows = 66;
 				writereditor.cols = 80; 
 				writereditor.onkeyup = function(){
+					
 					socket_aw.send(writereditor.value);	
 				};
 

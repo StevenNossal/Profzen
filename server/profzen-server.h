@@ -17,6 +17,9 @@
 
 #include "libwebsockets.h"
 
+#define MAX_WRITERS  50
+
+
 extern volatile int force_exit;
 extern struct lws_context *context;
 extern char *resource_path;
@@ -24,7 +27,6 @@ extern char crl_path[1024];
 
 extern struct lws_protocols protocols[];
 extern char text[4096];
-
 
 enum profzen_protocols {
 	/* always first */
@@ -45,8 +47,16 @@ struct per_session_data__http {
 
 
 struct per_session_data__profzen_writer {
+	int	 writerNumber;
 	char text[4096];
 };
+
+struct profzen_writer {
+	int		isDirty;
+	struct per_session_data__profzen_writer *pss;
+};
+	
+extern struct profzen_writer writers[MAX_WRITERS + 1];
 
 struct per_session_data__profzen_annotator {
 };
