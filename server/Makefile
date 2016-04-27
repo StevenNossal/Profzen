@@ -1,6 +1,6 @@
 all: profzen-server  
 
-profzen-server: profzen-server.o profzen-http.o profzen-writer.o profzen-annotator.o  
+profzen-server: profzen-server.o profzen-http.o profzen-writer.o profzen-annotator.o classroom.o  
 	gcc -Wall profzen-server.o profzen-http.o profzen-writer.o profzen-annotator.o\
 		classroom.o\
 		../lib/libwebsockets.a -lssl -lcrypto -o ../bin/profzen-server	   	

@@ -16,11 +16,13 @@ callback_profzen_writer(struct lws *wsi, enum lws_callback_reasons reason, void 
 	switch (reason) {
 
 		case LWS_CALLBACK_ESTABLISHED:
-			lwsl_info("%s: LWS_CALLBACK_ESTABLISHED\n", __func__);
+			lwsl_notice("%s: LWS_CALLBACK_ESTABLISHED\n", __func__);
 			pss->writerNumber = ++nextWriter;
 			memset(pss->text, 0, sizeof pss->text);
 			writers[pss->writerNumber].pss = pss;
-			user = Classroom_AddWriter(classroom, wsi);
+		
+			pss->writer = Classroom_AddWriter( classroom, wsi );
+
 			break;
 
 		case LWS_CALLBACK_PROTOCOL_DESTROY:
@@ -33,8 +35,13 @@ callback_profzen_writer(struct lws *wsi, enum lws_callback_reasons reason, void 
 			memset(pss->text, 0, sizeof pss->text);
 			strncpy(pss->text, in, len);
 			writers[pss->writerNumber].isDirty = 1;
+
+			Writer writer = pss->writer;
+			Writer_SetText( writer, in, len );
+
+
 			lwsl_notice("pss.text:%s\n", pss->text);
-			lws_callback_on_writable_all_protocol(context, &protocols[PROTOCOL_ANNOTATOR]);
+//			lws_callback_on_writable_all_protocol(context, &protocols[PROTOCOL_ANNOTATOR]);
 			break;
 		
 		default:

@@ -55,6 +55,7 @@ struct per_session_data__http {
 struct per_session_data__profzen_writer {
 	int	 writerNumber;
 	char text[4096];
+	Writer writer;
 };
 
 struct profzen_writer {
@@ -65,6 +66,7 @@ struct profzen_writer {
 extern struct profzen_writer writers[MAX_WRITERS + 1];
 
 struct per_session_data__profzen_annotator {
+	Annotator annotator;
 };
 
 

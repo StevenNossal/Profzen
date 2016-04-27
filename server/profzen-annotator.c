@@ -18,7 +18,7 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 
 		case LWS_CALLBACK_ESTABLISHED:
 			lwsl_notice("%s: LWS_CALLBACK_ESTABLISHED\n", __func__);
-			user = Classroom_AddAnnotator( classroom, wsi );
+			pss->annotator = Classroom_AddAnnotator( classroom, wsi );
 			break;
 
 		case LWS_CALLBACK_PROTOCOL_DESTROY:
@@ -44,7 +44,7 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 					if ( n < m ) {
 						lwsl_err("prozen-annotator partial write to %d vs %d\n", n, m);
 					}
-					writers[i].isDirty = 0;
+//					writers[i].isDirty = 0;
 				}			
 			}
 			break;		
