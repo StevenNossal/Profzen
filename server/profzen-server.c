@@ -18,6 +18,9 @@ char *resource_path = LOCAL_RESOURCE_PATH;
 char crl_path[1024] = "";
 char text[4096] = "";
 
+Classroom classroom;
+
+
 struct profzen_writer writers[MAX_WRITERS + 1];
 
 /* list of supported protocols and callbacks */
@@ -76,6 +79,9 @@ main (int argc, char **argv)
 	int syslog_options = LOG_PID | LOG_PERROR;
 	/* int daemonize = 0; */
 	
+	classroom = Classroom_new();
+
+
 
 	memset(&info, 0, sizeof info);
 	info.port = 7681;

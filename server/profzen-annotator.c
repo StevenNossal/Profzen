@@ -18,6 +18,7 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 
 		case LWS_CALLBACK_ESTABLISHED:
 			lwsl_notice("%s: LWS_CALLBACK_ESTABLISHED\n", __func__);
+			user = Classroom_AddAnnotator( classroom, wsi );
 			break;
 
 		case LWS_CALLBACK_PROTOCOL_DESTROY:

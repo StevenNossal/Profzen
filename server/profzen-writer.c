@@ -20,6 +20,7 @@ callback_profzen_writer(struct lws *wsi, enum lws_callback_reasons reason, void 
 			pss->writerNumber = ++nextWriter;
 			memset(pss->text, 0, sizeof pss->text);
 			writers[pss->writerNumber].pss = pss;
+			user = Classroom_AddWriter(classroom, wsi);
 			break;
 
 		case LWS_CALLBACK_PROTOCOL_DESTROY:

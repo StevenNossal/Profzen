@@ -1,5 +1,8 @@
 /* profzen-server.h */
 
+#ifndef PROFZEN_SERVER_H
+#define PROFZEN_SERVER_H
+
 #include "lws_config.h"
 
 #include <stdio.h>
@@ -16,6 +19,7 @@
 #include <unistd.h>
 
 #include "libwebsockets.h"
+#include "classroom.h"
 
 #define MAX_WRITERS  50
 
@@ -24,6 +28,8 @@ extern volatile int force_exit;
 extern struct lws_context *context;
 extern char *resource_path;
 extern char crl_path[1024];
+
+extern Classroom classroom;
 
 extern struct lws_protocols protocols[];
 extern char text[4096];
@@ -73,3 +79,5 @@ callback_profzen_writer(struct lws *wsi, enum lws_callback_reasons reason, void 
 
 extern int
 callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len);
+
+#endif
