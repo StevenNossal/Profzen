@@ -29,6 +29,6 @@ void*
 Annotator_GetSocket( Annotator annotator );
 
 char*
-Annotator_GetSocketWriteData( Annotator annotator, size_t* len);
+Annotator_GetSocketWriteData( Annotator annotator );
 
 #endif
