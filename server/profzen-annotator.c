@@ -6,7 +6,8 @@
 int
 callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len)
 {
-	int i, n, m;
+	int n, m;
+	char *socket_write_data;
 	
 	struct per_session_data__profzen_annotator *pss = 
 		(struct per_session_data__profzen_annotator *) user;
@@ -26,17 +27,14 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 			break;
 
 		case LWS_CALLBACK_SERVER_WRITEABLE:
-			for ( i = 1; i < MAX_WRITERS + 1; i++)
+			lwsl_notice("%s: LWS_CALLBACK_WRITEABLE\n", __func__);
+			Annotator annotator = pss->annotator;
+			socket_write_data = Annotator_GetSocketWriteData( annotator );
+			if ( NULL != socket_write_data )
 			{
-				struct per_session_data__profzen_writer *writer = writers[i].pss;
-				if ( NULL != writer && writers[i].isDirty == 1 )
-				{
-					char textout[4098];
-					memset( &textout, 0, sizeof(textout) );
-					snprintf(textout, 4098, "%02d%s", writer->writerNumber, writer->text );
-					m = strlen(textout);
-					n = lws_write(wsi, (unsigned char*) textout, m, LWS_WRITE_TEXT);
-					lwsl_notice("Writing %s\n", textout);
+				m = strlen(socket_write_data);
+				n = lws_write(wsi, (unsigned char*) socket_write_data, m, LWS_WRITE_TEXT);
+					lwsl_notice("Writing %s\n", socket_write_data);
 					if ( n < 0 ) {
 						lwsl_err("ERROR %d writing to profzen-annotator socket\n", n);
 						return -1;
@@ -44,7 +42,6 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 					if ( n < m ) {
 						lwsl_err("prozen-annotator partial write to %d vs %d\n", n, m);
 					}
-//					writers[i].isDirty = 0;
 				}			
 			}
 			break;		
@@ -61,3 +58,4 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 
 	return 0;
 }
+

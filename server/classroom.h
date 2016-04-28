@@ -3,51 +3,32 @@
 #ifndef CLASSROOM_H
 #define CLASSROOM_H
 
-#include "libwebsockets.h"
-
 typedef struct Classroom *Classroom;
 typedef struct Writer *Writer;
 typedef struct Annotator *Annotator;
 
-struct Classroom
-{
-	Annotator	Annotator;
-	Writer		Writer;
+Classroom
+Classroom_New (void);
 
-	int			nextWriter;
-};
+void
+Classroom_Free(Classroom classroom);
 
-struct Annotator
-{
-	Classroom	Classroom;
-	Annotator	Previous;
-	Annotator	Next;
+Writer
+Classroom_AddWriter( Classroom classroom, void *socket );
 
-	struct lws *wsi;
-};
+Annotator
+Classroom_AddAnnotator( Classroom classroom, void *socket );
 
-struct Writer
-{
-	Classroom	Classroom;
-	Writer		Previous;
-	Writer		Next;
+Annotator
+Classroom_GetNextAnnotator( Classroom classroom, Annotator annotator );
 
-	struct lws *wsi;
+void
+Writer_SetText( Writer writer, char* text, size_t len );
 
-	int			writerNumber;
-	char*		text;
-	size_t		len;
-};
+void*
+Annotator_GetSocket( Annotator annotator );
 
-Classroom Classroom_new (void);
-Annotator Annotator_new (Classroom classroom, Annotator previous, struct lws *wsi);
-Writer Writer_new(Classroom classroom, Writer previous, struct lws *wsi);
+char*
+Annotator_GetSocketWriteData( Annotator annotator, size_t* len);
 
-Annotator Classroom_AddAnnotator( Classroom classroom, struct lws *wsi );
-Writer Classroom_AddWriter( Classroom classroom, struct lws *wsi );
-
-void Writer_SetText( Writer writer, char* text, size_t len );
-char* Writer_GetText( Writer writer, size_t* len);
-
-int Writer_GetWriterNumber( Writer writer );
 #endif

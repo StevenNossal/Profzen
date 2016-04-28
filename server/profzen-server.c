@@ -16,7 +16,6 @@ struct lws_context *context;
 char *resource_path = LOCAL_RESOURCE_PATH;
 
 char crl_path[1024] = "";
-char text[4096] = "";
 
 Classroom classroom;
 
@@ -79,14 +78,10 @@ main (int argc, char **argv)
 	int syslog_options = LOG_PID | LOG_PERROR;
 	/* int daemonize = 0; */
 	
-	classroom = Classroom_new();
-
-
+	classroom = Classroom_New();
 
 	memset(&info, 0, sizeof info);
 	info.port = 7681;
-
-	memset(&writers, 0, sizeof writers);
 
 	while (n >= 0) {
 		n = getopt_long(argc, argv, "hd:p:Dr:", options, NULL);
@@ -172,6 +167,7 @@ main (int argc, char **argv)
 
 
 	lws_context_destroy(context);
+	Classroom_Free( classroom );
 
 	lwsl_notice("libwebsockets exited cleanly\n");
 	lwsl_notice("profzen exited cleanly\n");
