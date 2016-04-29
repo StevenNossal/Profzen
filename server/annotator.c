@@ -45,10 +45,8 @@ Annotator_GetSocketWriteData( Annotator annotator, char **out, size_t* len)
 void
 Annotator_Update( Annotator annotator, Writer writer )
 {
-	lwsl_notice("%s:\n", __func__);
-	
 	memset( annotator->sendBuffer, 0, sizeof(char) * 4096);
-	snprintf( annotator->sendBuffer + LWS_SEND_BUFFER_PRE_PADDING, writer->len + 2, "%02d%s",
+	snprintf( annotator->sendBuffer + LWS_SEND_BUFFER_PRE_PADDING, writer->len + 3, "%02d%s",
 			writer->writerNumber, writer->receiveBuffer );
 	annotator->len = writer->len + 2;
 	annotator->hasWrite = 1;
