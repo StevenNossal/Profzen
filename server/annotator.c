@@ -4,16 +4,20 @@
 #include "classroom_private.h"
 
 Annotator
-Annotator_New (Classroom classroom, Annotator previous, void* socket)
+Annotator_New (Classroom classroom, Annotator previous)
 {
+	lwsl_notice("%s:\n", __func__);
 	Annotator annotator = (Annotator) malloc(sizeof (struct Annotator));
 	memset(annotator, 0, sizeof( struct Annotator ));
-	annotator->Classroom = classroom;
-	annotator->Previous = previous;
-	annotator->socket = socket;
 	
-	annotator->updates = AnnatatorUpdate_New( NULL, NULL );
+	annotator->classroom = classroom;
+	annotator->previous = previous;
 	
+	annotator->hasWrite = 0;
+	annotator->sendBuffer = (char*) malloc( sizeof( char ) * 4096 );
+	annotator->len = 0;	
+
+
 	return annotator;
 }
 
@@ -22,62 +26,32 @@ Annotator_Free(Annotator annotator)
 {
 }
 
-void*
-Annotator_GetSocket( Annotator annotator )
-{
-	return annotator->socket;
-}
 
-void
-Annotator_AddToUpdateList( Annotator annotator, Writer writer )
+int
+Annotator_GetSocketWriteData( Annotator annotator, char **out, size_t* len)
 {
-	AnnatatorUpdate last;
-	for ( last = annotator->updates->next; last != NULL; last = last->next );
+	int hasWrite = annotator->hasWrite;
 
-	last->next = AnnatatorUpdate_New( last, writer );
-}
-
-AnnatatorUpdate
-AnnatatorUpdate_New( AnnatatorUpdate previous, Writer writer )
-{
-	AnnotatorUpdate au = malloc( sizeof (struct AnnatatorUpdate));
-	au->writer = writer;
-	au->previous = NULL;
-	au->next = NULL;
-	return au;
-}
-
-void
-AnnatatorUpdate_Free( AnnotatorUpdate au )
-{
-}
-
-char*
-AnnatatorUpdate_GetText( AnnatatorUpdate au, size_t* len )
-{
-	if ( au->text == NULL )
+	if ( 1 == hasWrite )
 	{
-		au->len = au->writer->len + 2;
-		au->text = malloc( sizeof( char ) * au->len );
-		memset( au->text, 0, sizeof( char ) * au->len );
-		snprintf( au->text, au->len, "%02d%s", au->writer->writerNumber, au->writer->text );
+		*out = annotator->sendBuffer + LWS_SEND_BUFFER_PRE_PADDING;
+		*len = annotator->len;
+		annotator->hasWrite = 0;
 	}
 
-	*len = au->len;
-	return au->text;
+	return hasWrite;
 }
-
 
 void
-AnnatatorUpdate_Remove( AnnatatorUpdate annatatorUpdate )
+Annotator_Update( Annotator annotator, Writer writer )
 {
-	if ( annatatorUpdate->previous != NULL ) {
-		annatatorUpdate->previous = annatatorUpdate->next; }
-
-	if ( annatatorUpdate->text != NULL ) {
-		free( annatatorUpdate->text );
-	}
-
-	free ( annatatorUpdate );
+	lwsl_notice("%s:\n", __func__);
+	
+	memset( annotator->sendBuffer, 0, sizeof(char) * 4096);
+	snprintf( annotator->sendBuffer + LWS_SEND_BUFFER_PRE_PADDING, writer->len + 2, "%02d%s",
+			writer->writerNumber, writer->receiveBuffer );
+	annotator->len = writer->len + 2;
+	annotator->hasWrite = 1;
 }
-		
+	
+	

@@ -1,71 +1,58 @@
 /* classroom_private.h */
 
-#ifndef CLASSROOM_PRIVATe_H
+#ifndef CLASSROOM_PRIVATE_H
 #define CLASSROOM_PRIVATE_H
-
-
-typedef struct AnnatatorUpdate *AnnatatorUpdate;
 
 
 struct Classroom
 {
-	Annotator	Annotator;
-	Writer		Writer;
+	Annotator	annotator;
+	Writer		writer;
 
 	int			nextWriter;
 };
 
 struct Writer
 {
-	Classroom	Classroom;
-	Writer		Previous;
-	Writer		Next;
-
-	void		*socket;
+	Classroom	classroom;
+	Writer		previous;
+	Writer		next;
 
 	int			writerNumber;
-	char*		text;
+	char		*receiveBuffer;
 	size_t		len;
 };
 
 struct Annotator
 {
-	Classroom	Classroom;
-	Annotator	Previous;
-	Annotator	Next;
+	Classroom	classroom;
+	Annotator	previous;
+	Annotator	next;
 
-	void		*socket;
+	int			hasWrite;
 
-	AnnatatorUpdate		updates;
-
-};
-
-struct AnnatatorUpdate
-{
-	Writer				writer;
+	char		*sendBuffer;
+	size_t		len; 
 	
-	char*				text;
-	size_t				len;
-
-	AnnatatorUpdate		previous;
-	AnnatatorUpdate		next;
 };
 
+void
+Classroom_UpdateAnnotators(Classroom classroom, Writer writer);
 
 Annotator
-Annotator_New (Classroom classroom, Annotator previous, struct lws *wsi);
+Classroom_GetNextAnnotator( Classroom classroom, Annotator annotator );
+
+Annotator
+Annotator_New (Classroom classroom, Annotator previous);
 
 void
 Annotator_Free(Annotator annotator);
 
-AnnatatorUpdate
-AnnatatorUpdate_New( AnnatatorUpdate previous, Writer writer );
-
 void
-AnnotatorUpdate_Free( AnnotatorUpdate annotatorUpdate );
+Annotator_Update( Annotator annotator, Writer writer );
 
 Writer
-Writer_New(Classroom classroom, Writer previous, struct lws *wsi);
+Writer_New(Classroom classroom, Writer previous);
 
 void
 Writer_Free(Writer writer);

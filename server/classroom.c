@@ -11,8 +11,8 @@ Classroom_New (void)
 	memset( (void*) classroom, 0, sizeof (struct Classroom ));
 
 	classroom->nextWriter = 0;
-	classroom->Annotator = Annotator_new(classroom, NULL, NULL);
-	classroom->Writer = Writer_new(classroom, NULL, NULL);
+	classroom->annotator = Annotator_New(classroom, NULL);
+	classroom->writer = Writer_New(classroom, NULL);
 
 	return classroom;
 }
@@ -20,28 +20,46 @@ Classroom_New (void)
 void
 Classroom_Free(Classroom classroom)
 {
-	
+	lwsl_debug("%s:\n", __func__);
 }
 
 Annotator
-Classroom_AddAnnotator( Classroom classroom, void *socket )
+Classroom_AddAnnotator( Classroom classroom )
 {
+	lwsl_debug("%s:\n", __func__);
 	Annotator last;
-	for(last = classroom->Annotator; last->Next != NULL; last = last->Next );
-	last->Next = Annotator_new(classroom, last, socket);
-	return last->Next;
+	for(last = classroom->annotator; last->next != NULL; last = last->next );
+	last->next = Annotator_New(classroom, last);
+	return last->next;
+}
+
+Annotator
+Classroom_GetNextAnnotator( Classroom classroom, Annotator annotator )
+{
+	lwsl_debug("%s:\n", __func__);
+	if (NULL == annotator) annotator = classroom->annotator;
+	return annotator->next;
 }
 
 Writer
-Classroom_AddWriter( Classroom classroom, void *socket )
+Classroom_AddWriter( Classroom classroom)
 {
-	lwsl_notice("%s:\n", __func__);
+	lwsl_debug("%s:\n", __func__);
 	
 	Writer last;
-	for( last = classroom->Writer; last->Next != NULL; last = last->Next );
-	last->Next = Writer_new(classroom, last, socket);
-	return last->Next;
+	for( last = classroom->writer; last->next != NULL; last = last->next );
+	last->next = Writer_New(classroom, last);
+	return last->next;
 }
 
-
+void
+Classroom_UpdateAnnotators(Classroom classroom, Writer writer)
+{
+	lwsl_notice("%s:\n", __func__);
+	Annotator annotator;
+	for( annotator = classroom->annotator->next; annotator != NULL; annotator = annotator->next )
+	{
+		Annotator_Update(annotator, writer);
+	}	
+}
 		

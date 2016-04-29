@@ -19,9 +19,6 @@ char crl_path[1024] = "";
 
 Classroom classroom;
 
-
-struct profzen_writer writers[MAX_WRITERS + 1];
-
 /* list of supported protocols and callbacks */
 
 struct lws_protocols protocols[] = {
