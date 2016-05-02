@@ -37,6 +37,8 @@
 		}
 		
 		function mod_selection (val1,val2) {
+			console.log("mod_selection..");
+			
 			// Get the text area
 			var textArea = document.getElementById('my_text');
 			
@@ -54,11 +56,11 @@
 				}
 			}
 			// Do we even have a selection?
-			if (typeof(textArea.selectionstart) != "undefined") {
+			if (typeof(textArea.selectionStart) != "undefined") {
 				// Split the text in three pieces - the selection, and what comes before and after.
-				var begin = textArea.value.substr(0, textArea.selectionstart);
-				var selection = textArea.value.substr(textArea.selectionstart, textArea.selectionend - textArea.selectionstart);
-				var end = textArea.value.substr(textArea.selectionend);
+				var begin = textArea.value.substr(0, textArea.selectionStart);
+				var selection = textArea.value.substr(textArea.selectionStart, textArea.selectionEnd - textArea.selectionStart);
+				var end = textArea.value.substr(textArea.selectionEnd);
 				
 				// Insert the tags between the three pieces of text.
 				textArea.value = begin + val1 + selection + val2 + end;
