@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 				
 	var writereditor = document.getElementById("editor");
+	
 	writereditor.onkeyup = function(){
 				socket_aw.send(writereditor.innerHTML);	
 	};
