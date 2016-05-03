@@ -43,6 +43,30 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.execCommand('superscript');
 	});
 	
+	$("#btn-paragraph").on("click", function() {
+		document.execCommand('insertParagraph');
+	});
+	
+	$("#btn-indent").on("click", function() {
+		document.execCommand('indent');
+	});
+	
+	$("#btn-outdent").on("click", function() {
+		document.execCommand('outdent');
+	});
+
+	$("#btn-copy").on("click", function() {
+		document.execCommand('copy');
+	});
+	
+	$("#btn-cut").on("click", function() {
+		document.execCommand('cut');
+	});
+	
+	$("#btn-paste").on("click", function() {
+		document.execCommand('paste');
+	});
+
 	$("#btn-undo").on("click", function() {
 		document.execCommand('undo');
 	});
