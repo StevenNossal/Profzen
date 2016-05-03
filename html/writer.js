@@ -3,9 +3,10 @@
 		
 			
 var socket_aw;
+var writereditor;
 			
 document.addEventListener('DOMContentLoaded', function() {
-				
+	
 	try {
 		socket_aw= new WebSocket(get_appropriate_ws_url(),"profzen-writer");
 		socket_aw.onopen = function() {
@@ -18,7 +19,40 @@ document.addEventListener('DOMContentLoaded', function() {
 			alert('<p>Error' + exception);
 	}
 				
-	var writereditor = document.getElementById("editor");
+	$("#btn-bold").on("click", function() {
+	  document.execCommand('bold');
+	});
+
+	$("#btn-italic").on("click", function() {
+		document.execCommand('italic');
+	});
+	
+	$("#btn-underline").on("click", function() {
+		document.execCommand('underline');
+	});
+
+	$("#btn-strikethrough").on("click", function() {
+		document.execCommand('strikethrough');
+	});
+
+	$("#btn-subscript").on("click", function() {
+		document.execCommand('subscript');
+	});
+
+	$("#btn-superscript").on("click", function() {
+		document.execCommand('superscript');
+	});
+	
+	$("#btn-undo").on("click", function() {
+		document.execCommand('undo');
+	});
+	
+	$("#btn-redo").on("click", function() {
+		document.execCommand('redo');
+	});
+
+	
+	writereditor = document.getElementById("editor");
 	
 	writereditor.onkeyup = function(){
 				socket_aw.send(writereditor.innerHTML);	
@@ -44,3 +78,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 }, false);
+

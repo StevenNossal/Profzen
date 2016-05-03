@@ -57,3 +57,7 @@ blockquote {
 	margin: 0;
 	padding: 0 10px;
 }
+
+sub, sup {
+	font-size: 100%;
+}
