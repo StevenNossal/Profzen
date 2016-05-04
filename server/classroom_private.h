@@ -19,21 +19,44 @@ struct Writer
 	Writer		next;
 
 	int			writerNumber;
-	char		*receiveBuffer;
-	size_t		len;
+	time_t		timeLastChange;
+
+	char		receiveBuffer[4096];
+	size_t		receiveBufferLength;
+
+	char		*docHTMLBuffer;
+	char		*docHTMLUserStart;
+	size_t		docHTMLLength;
 };
+
+typedef struct AnnotatorWriter	*AnnotatorWriter;
 
 struct Annotator
 {
 	Classroom	classroom;
 	Annotator	previous;
 	Annotator	next;
+	AnnotatorWriter	  annotatorWriter;
 
 	int			hasWrite;
 
-	char		*sendBuffer;
-	size_t		len; 
+	char    	sendBuffer[4096];
+	char		*sendBufferUserStart;
+	size_t		sendBufferLength; 
 	
+};
+
+struct AnnotatorWriter
+{
+	Annotator		  annotator;
+	Writer			  writer;
+	AnnotatorWriter	  next;
+
+	time_t			  timeLastWriterChange;
+	time_t			  timeLastAnnotatorSend;
+
+	int				  hasWrite;
+
 };
 
 void

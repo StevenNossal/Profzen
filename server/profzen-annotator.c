@@ -47,6 +47,10 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 
 		case LWS_CALLBACK_RECEIVE:
 			lwsl_notice("%s: LWS_CALLBACK_RECEIVE\n", __func__);
+			annotator = pss->annotator;
+			
+			Annotator_PutSocketReceiveData( annotator, in, len);
+			lws_callback_on_writable( wsi );
 			break;
 
 		default:

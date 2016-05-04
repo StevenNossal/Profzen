@@ -27,10 +27,20 @@ Annotator
 Classroom_AddAnnotator( Classroom classroom )
 {
 	lwsl_debug("%s:\n", __func__);
-	Annotator last;
-	for(last = classroom->annotator; last->next != NULL; last = last->next );
-	last->next = Annotator_New(classroom, last);
-	return last->next;
+
+	Annotator new = NULL;
+	Annotator last = classroom->annotator;
+	Writer writer = NULL;
+
+	for(; NULL != last->next; last = last->next );
+	new = Annotator_New(classroom, last);
+	last->next = new;
+
+	for( writer = classroom->writer; NULL != writer->next; writer = writer->next ) {
+		Annotator_Update( new, writer );
+	}
+
+	return new;
 }
 
 Annotator

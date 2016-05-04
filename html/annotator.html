@@ -1,6 +1,26 @@
 </html>
 <!DOCTYPE HTML>
 <html lang="en">
+  <head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Profzen Annotator</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+	integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+	crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+	integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+	crossorigin="anonymous">
+
+	<link rel="stylesheet" href="annotator.css"/>
+
+  </head>
 	<head>
 		<meta charset=utf-8 http-equiv="Content-Language" content="en"/>
 		<title>Profzen Annotator</title>
@@ -36,54 +56,13 @@
 		<div id="writer09" class="writer"></div>
 		<h2>Writer 10</h2>
 		<div id="writer10" class="writer"></div>
-		<script>
-			
-			var socket_aw;
-			
-			document.addEventListener('DOMContentLoaded', function() {
-				
-			       
-				try {
-					socket_aw= new WebSocket(get_appropriate_ws_url(),"profzen-annotator");
-					socket_aw.onopen = function() {
-						//alert("Socket Opened!");
-						socket_aw.send("test messge!\n");
 
-					}	
-					socket_aw.onmessage = function got_packet(msg) {
-						var targetDiv = document.getElementById("writer" + msg.data.substring(0,2));
-						targetDiv.innerHTML = msg.data.substring(2, msg.data.length);
-					}
-					socket_aw.onclose = function() {
-						//alert("Socket Closed!");
-					}
-				} catch(exception) {
-					alert('<p>Error' + exception);
-				}
-				
-
-				function get_appropriate_ws_url()
-				{
-					var pcol;
-					var u = document.URL;
-
-					if (u.substring(0, 5) == "https") {
-						pcol = "wss://";
-						u = u.substr(8);
-					} else {
-						pcol = "ws://";
-						if (u.substring(0,4) == "http")
-						u = u.substr(7);
-					}
-
-					u = u.split('/');
-
-					return pcol + u[0];
-				}
-
-
-		    	}, false);
-		</script>
-	</body>
-
+  <script   src="https://code.jquery.com/jquery-2.2.3.min.js"
+  integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+  crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+  integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+  crossorigin="anonymous"></script>
+  <script src="annotator.js" type="text/javascript"></script>
+		</body>
 </html>
