@@ -3,6 +3,7 @@
 #ifndef CLASSROOM_PRIVATE_H
 #define CLASSROOM_PRIVATE_H
 
+#include <assert.h>
 
 struct Classroom
 {

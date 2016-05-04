@@ -1,0 +1,8 @@
+/* annotator.css */
+
+.writer {
+	width: 50%;
+	min-height: 100px;
+	max-height: 500px;
+	border: 1px solid black;
+}	

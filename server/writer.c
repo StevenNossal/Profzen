@@ -42,6 +42,9 @@ Writer_Free( Writer writer )
 void
 Writer_PutSocketReceiveData( Writer writer, char *in, size_t len)
 {	
+	assert( writer );
+	assert( writer->writerNumber != 0);
+	
 	// TODO: Implement Writer Commands
 	// 01 -- Reserved for Login
 	// 02 -- Set docHTML
@@ -67,7 +70,13 @@ Writer_PutSocketReceiveData( Writer writer, char *in, size_t len)
 void
 set_docHTML( Writer writer, char* in, size_t len )
 {
-    size_t bufSize = LWS_SEND_BUFFER_PRE_PADDING + sizeof(char) * len + 5;
+	assert( writer );
+	assert( writer->writerNumber != 0 );
+
+	lwsl_notice("%s, writer = %d, writerNumber = %d", __func__, writer, writer->writerNumber );
+    lwsl_notice("%s, in: %s", __func__, in);	
+
+	size_t bufSize = LWS_SEND_BUFFER_PRE_PADDING + sizeof(char) * len + 5;
 	
 	if ( NULL != writer->docHTMLBuffer ){
 		free( writer->docHTMLBuffer);

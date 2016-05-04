@@ -36,7 +36,7 @@ Classroom_AddAnnotator( Classroom classroom )
 	new = Annotator_New(classroom, last);
 	last->next = new;
 
-	for( writer = classroom->writer; NULL != writer->next; writer = writer->next ) {
+	for( writer = classroom->writer->next; NULL != writer; writer = writer->next ) {
 		Annotator_Update( new, writer );
 	}
 

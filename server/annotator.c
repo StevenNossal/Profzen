@@ -85,18 +85,25 @@ Annotator_PutSocketReceiveData( Annotator annotator, char *in, size_t len){
 int
 Annotator_GetSocketWriteData( Annotator annotator, char **out, size_t* len)
 {
+	lwsl_notice("%s, annotator->hasWrite = %d", __func__, annotator->hasWrite);
 
 	AnnotatorWriter aw = NULL;
 	int hasWrite = annotator->hasWrite;
 
 	if ( 1 == hasWrite ) {
+		lwsl_notice("%si: sending from annotator->sendBuffer", __func__);
 		*out = annotator->sendBufferUserStart;
 		*len = annotator->sendBufferLength;
 		annotator->hasWrite = 0;
 	} else {
+		lwsl_notice("%s, sending from annotator->annotatorWriter...", __func__);
 		aw = annotator->annotatorWriter;
-		for ( ; NULL != aw && 1 != aw->hasWrite; aw = aw->next );
-		if ( NULL != aw ) {
+		for ( ; NULL != aw && 0 == aw->hasWrite; aw = aw->next );
+		lwsl_notice("%s, aw = %d", __func__, aw);
+		if ( NULL != aw ) lwsl_notice("%s, aw->writer = %d", __func__, aw->writer);
+		if ( NULL != aw && NULL != aw->writer) {
+			lwsl_notice("%s: sending from annotator->annotatorWriter, writerNumber = %d",
+				   	__func__, aw->writer->writerNumber);
 			*out = aw->writer->docHTMLUserStart;
 			*len = aw->writer->docHTMLLength;
 			hasWrite = aw->hasWrite;
@@ -105,17 +112,30 @@ Annotator_GetSocketWriteData( Annotator annotator, char **out, size_t* len)
 		}
 	}
 
+	lwsl_notice("Leaving %s, hasWrite = %d", __func__, hasWrite );
+	
 	return hasWrite;
 }
 
 void
 Annotator_Update( Annotator annotator, Writer writer )
 {
+	assert( annotator );
+	assert( writer );
+	
+	lwsl_notice("%s, annotator = %d, writer = %d", __func__, annotator, writer ); 
+	lwsl_notice("%s, writer->writerNumber = %d", __func__, writer->writerNumber );
+
 	AnnotatorWriter aw = AnnotatorWriter_Find( annotator, writer );
 	if ( NULL == aw ) {
 		aw = Annotator_AddAnnotatorWriter( annotator, writer );
 	}
 
+	assert( aw );
+	assert( NULL != aw->writer );
+	assert( 0 != aw->writer->writerNumber );
+
+	lwsl_notice("%s, updating writerNumber = %d", __func__, aw->writer->writerNumber );
 	aw->timeLastWriterChange = writer->timeLastChange;
 	aw->hasWrite = 1;
 }
@@ -166,10 +186,13 @@ GetWriterInnerHTML( Annotator annotator, char* payload )
 AnnotatorWriter
 Annotator_AddAnnotatorWriter( Annotator annotator, Writer writer )
 {
+  lwsl_notice("%s, annotator = %d, writer = %d", __func__, annotator, writer );
   AnnotatorWriter aw = AnnotatorWriter_New( annotator, writer );
   AnnotatorWriter last = annotator->annotatorWriter;
   for( ; NULL != last->next; last = last->next );
   last->next = aw;
+
+  lwsl_notice("%s, returning aw = %d", __func__, aw );
   return aw;
 }
 
@@ -177,20 +200,25 @@ Annotator_AddAnnotatorWriter( Annotator annotator, Writer writer )
 AnnotatorWriter 
 AnnotatorWriter_New( Annotator annotator, Writer writer )
 {
+  lwsl_notice("%s, annotator = %d, writer = %d", __func__, annotator, writer );
   AnnotatorWriter aw = malloc( sizeof( struct AnnotatorWriter ));
   memset( aw, 0, sizeof( struct AnnotatorWriter ));
   
   aw->annotator = annotator;
   aw->writer = writer;
   
+  lwsl_notice("%s, returning aw = %d", __func__, aw );
   return aw;
 }
 
 AnnotatorWriter
 AnnotatorWriter_Find( Annotator annotator, Writer writer )
 {
+  lwsl_notice("%s, annotator = %d, writer = %d", __func__, annotator, writer );
   AnnotatorWriter aw = annotator->annotatorWriter; 
   for ( ; aw != NULL && aw->writer != writer; aw = aw-> next );
+  
+  lwsl_notice("%s, returning aw = %d", __func__, aw );
   return aw;
 }
 
