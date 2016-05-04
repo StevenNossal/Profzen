@@ -33,8 +33,8 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 			annotator = pss->annotator;
 			
 			if ( 1 == Annotator_GetSocketWriteData( annotator, (char**) &socket_write_data, (size_t*) &m )) {
-				n = lws_write(wsi, socket_write_data,  m, LWS_WRITE_TEXT);
 				lwsl_notice("Writing %s\n", socket_write_data);
+				n = lws_write(wsi, socket_write_data,  m, LWS_WRITE_TEXT);
 				if ( n < 0 ) {
 					lwsl_err("ERROR %d writing to profzen-annotator socket\n", n);
 				return -1;
@@ -42,6 +42,7 @@ callback_profzen_annotator(struct lws *wsi, enum lws_callback_reasons reason, vo
 				if ( n < m ) {
 					lwsl_err("prozen-annotator partial write to %d vs %d\n", n, m);
 				}
+				lws_callback_on_writable( wsi );
 			}
 			break;		
 
