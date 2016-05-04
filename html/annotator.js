@@ -72,7 +72,39 @@ function on_get_writer_inner_html( payload )
   console.log("on_get_writer_inner_html: writerNumber");
   var writerNumber = payload.substring(0,2);
   console.dir( writerNumber );
-  var targetDiv = document.getElementById("writer" + writerNumber);
-  targetDiv.innerHTML = payload.substring(2, payload.length);
+  
+  //var targetDiv = document.getElementById("writer" + writerNumber);
+  var targetDiv = get_or_create_thumbnail_div( writerNumber );
+  targetDiv.html(payload.substring(2, payload.length));
 }
 
+function get_or_create_thumbnail_div( writerNumber )
+{
+	
+   console.log( "get_or_create_thumbnail_div: writerNumber" );
+   console.dir( writerNumber );
+
+   if ( 0 == $("#writer" + writerNumber ).length )
+   {
+	   create_thumbnail_div( writerNumber );
+   }
+
+   target = $("#writer" + writerNumber );
+	
+   console.log( "get_or_create_thumbnail_div: return value ");
+   console.dir( target );
+	
+   return target;
+
+}
+
+
+function create_thumbnail_div( writerNumber )
+{
+  console.log("create_thumbnail_div: writerNumber");
+  console.dir( writerNumber );
+	
+  var thumbnailDiv = $("#thumbnail-view");
+  thumbnailDiv.append("<h2>Writer " + writerNumber + "</h2><div id='writer" + writerNumber + "' class='writer'></div>");
+
+}
