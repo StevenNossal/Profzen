@@ -19,8 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			if ( 1 == command ) on_get_writer_list(payload);
 			if ( 2 == command ) on_get_writer_inner_html(payload);
 
-//			var targetDiv = document.getElementById("writer" + msg.data.substring(0,2));
-//			targetDiv.innerHTML = msg.data.substring(2, msg.data.length);
 		}
 		socket_aw.onclose = function() {
 		  console.log("socket_aw.onclose");
@@ -73,7 +71,6 @@ function on_get_writer_inner_html( payload )
   var writerNumber = payload.substring(0,2);
   console.dir( writerNumber );
   
-  //var targetDiv = document.getElementById("writer" + writerNumber);
   var targetDiv = get_or_create_thumbnail_div( writerNumber );
   targetDiv.html(payload.substring(2, payload.length));
 }
@@ -103,9 +100,6 @@ function create_thumbnail_div( writerNumber )
 {
   console.log("create_thumbnail_div: writerNumber");
   console.dir( writerNumber );
-	
-  //var thumbnailDiv = $("#thumbnail-view");
-  //thumbnailDiv.append("<h2>Writer " + writerNumber + "</h2><div id='writer" + writerNumber + "' class='writer'></div>");
 
   var emptySlot = get_free_thumbnail_slot();
   emptySlot.append("<h2>Writer " + writerNumber + "</h2><div id='writer" + writerNumber + "' class='writer'></div>");
@@ -127,8 +121,8 @@ function get_free_thumbnail_slot()
 function create_new_thumbnail_row()
 {
 	var newRow = $("<div class='row'></div>");
-	for ( i = 0; i < 6; i++ ) {
-	  newRow.append("<div class='col-md-2 free-thumbnail-slot'></div>");
+	for ( i = 0; i < 3; i++ ) {
+	  newRow.append("<div class='col-md-4 free-thumbnail-slot'></div>");
 	}
 	
 	$("#thumbnail-view").append( newRow );
