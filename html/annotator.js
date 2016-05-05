@@ -6,6 +6,8 @@ var writerlist;
 
 document.addEventListener('DOMContentLoaded', function() {
 	
+	show_thumbnail_view();
+
 	try {
 		socket_aw= new WebSocket(get_appropriate_ws_url(),"profzen-annotator");
 		socket_aw.onopen = function() {
@@ -23,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		socket_aw.onclose = function() {
 		  console.log("socket_aw.onclose");
 		}
+
+		
 
 	} catch(exception) {
 		alert('<p>Error' + exception);
@@ -55,6 +59,13 @@ function request_writer_list()
   socket_aw.send("01");	
 }
 
+function request_writer_inner_html( writerNumber )
+{
+  console.log("request_writer: writerNumber");
+  console.dir( writerNumber );
+  socket_aw.send("02" + writerNumber );
+}
+
 function on_get_writer_list(payload)
 {
   console.log("on_get_writer_listi:payload:");
@@ -73,11 +84,21 @@ function on_get_writer_inner_html( payload )
   
   var targetDiv = get_or_create_thumbnail_div( writerNumber );
   targetDiv.html(payload.substring(2, payload.length));
+
+  var singleWriterId = $("#single-writer").attr("data-writer-id");
+  console.log( "singleWriterId");
+  console.dir( singleWriterId );
+
+  if ( writerNumber == singleWriterId )
+  {
+	$("#single-writer").html(payload.substring(2, payload.length));
+  }
 }
 
 function get_or_create_thumbnail_div( writerNumber )
 {
-	
+	// TO DO: Select by data-writer-id
+
    console.log( "get_or_create_thumbnail_div: writerNumber" );
    console.dir( writerNumber );
 
@@ -102,7 +123,11 @@ function create_thumbnail_div( writerNumber )
   console.dir( writerNumber );
 
   var emptySlot = get_free_thumbnail_slot();
-  emptySlot.append("<h2>Writer " + writerNumber + "</h2><div id='writer" + writerNumber + "' class='writer'></div>");
+  emptySlot.append("<h2>Writer " + writerNumber 
+		  + "</h2><div id='writer" + writerNumber
+		  + "' class='thumbnail-writer' data-writer-id='" + writerNumber + "'></div>");
+
+  $(".thumbnail-writer").click(thumbnail_on_click);
 }
 
 function get_free_thumbnail_slot()
@@ -126,4 +151,32 @@ function create_new_thumbnail_row()
 	}
 	
 	$("#thumbnail-view").append( newRow );
+}
+
+function thumbnail_on_click( )
+{
+	console.log("thumbnail on click");
+	var writerNumber = $(this).attr("data-writer-id");
+	console.log("writerNumber = " + writerNumber );
+	show_single_writer_view( writerNumber );
+}
+
+function show_thumbnail_view()
+{
+  console.log("show_thumbnail_view");
+  $("#thumbnail-view").show();
+  $("#single-writer-buttons").hide();
+  $("#single-writer-view").hide();
+}
+
+function show_single_writer_view( writerNumber )
+{
+  $("#single-writer").attr("data-writer-id", writerNumber );
+  request_writer_inner_html( writerNumber );
+
+  $("#single-writer-view").show();
+  $("#single-writer-buttons").show();
+  $("#thumbnail-view").hide();
+  
+  $(".btn-show-thumbnail-view").click(show_thumbnail_view);
 }
