@@ -136,8 +136,10 @@ Annotator_Update( Annotator annotator, Writer writer )
 	assert( 0 != aw->writer->writerNumber );
 
 	lwsl_notice("%s, updating writerNumber = %d", __func__, aw->writer->writerNumber );
-	aw->timeLastWriterChange = writer->timeLastChange;
-	aw->hasWrite = 1;
+	if ( NULL != writer->docHTMLBuffer ) {
+	  aw->timeLastWriterChange = writer->timeLastChange;
+	  aw->hasWrite = 1;
+	}
 }
 
 		
