@@ -104,7 +104,32 @@ function create_thumbnail_div( writerNumber )
   console.log("create_thumbnail_div: writerNumber");
   console.dir( writerNumber );
 	
-  var thumbnailDiv = $("#thumbnail-view");
-  thumbnailDiv.append("<h2>Writer " + writerNumber + "</h2><div id='writer" + writerNumber + "' class='writer'></div>");
+  //var thumbnailDiv = $("#thumbnail-view");
+  //thumbnailDiv.append("<h2>Writer " + writerNumber + "</h2><div id='writer" + writerNumber + "' class='writer'></div>");
 
+  var emptySlot = get_free_thumbnail_slot();
+  emptySlot.append("<h2>Writer " + writerNumber + "</h2><div id='writer" + writerNumber + "' class='writer'></div>");
+}
+
+function get_free_thumbnail_slot()
+{
+  if ( 0 == $(".free-thumbnail-slot").length )
+  {
+	  create_new_thumbnail_row();
+  }
+
+  var freeSlot = $(".free-thumbnail-slot").first();
+  freeSlot.removeClass("free-thumbnail-slot");
+
+  return freeSlot;
+}
+
+function create_new_thumbnail_row()
+{
+	var newRow = $("<div class='row'></div>");
+	for ( i = 0; i < 6; i++ ) {
+	  newRow.append("<div class='col-md-2 free-thumbnail-slot'></div>");
+	}
+	
+	$("#thumbnail-view").append( newRow );
 }
